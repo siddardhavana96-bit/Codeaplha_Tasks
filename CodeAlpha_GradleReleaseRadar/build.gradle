@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'jacoco'
+}
+
+group = 'dev.codealpha'
+version = System.getenv('APP_VERSION') ?: '0.1.0-dev'
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+application {
+    mainClass = 'dev.codealpha.releaseradar.ReleaseRadarApplication'
+    applicationDefaultJvmArgs = ['--add-modules=jdk.httpserver']
+}
+repositories { mavenCentral() }
+dependencies { testImplementation libs.junit.jupiter }
+tasks.withType(JavaCompile).configureEach { options.compilerArgs += ['--add-modules', 'jdk.httpserver'] }
+tasks.named('test') { useJUnitPlatform() }
+jacocoTestReport { reports { xml.required = true; html.required = true } }
+jar { manifest { attributes('Main-Class': application.mainClass.get(), 'Implementation-Version': version) } }

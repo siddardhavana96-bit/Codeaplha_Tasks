@@ -1,0 +1,6 @@
+services:
+  deliverypulse:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      APP_VERSION: local-demo
